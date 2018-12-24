@@ -21,7 +21,7 @@ def handler(event, context):
         # Create CloudWatch Event rule for initating lambda function
         rule_arn = cwe_client.put_rule(
             Name=rule_name,
-            ScheduleExpression="0 12 * * 5",
+            ScheduleExpression="cron(0 12 * * 5 *)",
             State="ENABLED",
             Description='Softstop rds "{rds_instance}", enable/disable instance weekly',
         )["RuleArn"]
