@@ -8,7 +8,7 @@ def handler(event, context):
 
     # Determine if CloudWatch Event rule already exists, create if DNE
     cwe_client = boto3.client("events")
-    rule_name = f"softstop-{rds_instance}"
+    rule_name = f"softstop-{rds_instance_name}"
 
     if rule_name not in cwe_client.list_rules(NamePrefix=rule_name)["Rules"]:
         # Get current lambda function context's Arn
