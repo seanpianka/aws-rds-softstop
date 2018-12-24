@@ -21,9 +21,9 @@ def handler(event, context):
         # Create CloudWatch Event rule for initating lambda function
         rule_arn = cwe_client.put_rule(
             Name=rule_name,
-            ScheduleExpression="cron(0 12 * * 5 *)",
+            ScheduleExpression="cron(0 12 ? * 5 *)",
             State="ENABLED",
-            Description='Softstop rds "{rds_instance}", enable/disable instance weekly',
+            Description=f'Softstop rds "{rds_instance_name}", enable/disable instance weekly',
         )["RuleArn"]
 
         cwe_client.put_targets(
@@ -32,7 +32,7 @@ def handler(event, context):
                 {
                     "Id": lambda_function_name,
                     "Arn": lambda_function_arn,
-                    "Input": rds_instance,
+                    "Input": f'{{ "rds_instance_name": "{rds_instance_name}" }}',
                 }
             ],
         )
@@ -41,7 +41,7 @@ def handler(event, context):
     try:
         rds_instance = rds_client.describe_db_instances(
             DBInstanceIdentifier=rds_instance_name
-        )["DbInstances"][0]
+        )["DBInstances"][0]
     except KeyError:
         print(f'Instance "{rds_instance_name}" does not exist.')
         raise
@@ -52,7 +52,7 @@ def handler(event, context):
         rds_client.start_db_instance(DBInstanceIdentifier=rds_instance_name)
         while (
             rds_client.describe_db_instances(DBInstanceIdentifier=rds_instance_name)[
-                "DbInstances"
+                "DBInstances"
             ][0]["DBInstanceStatus"]
             != "available"
         ):
