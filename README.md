@@ -26,6 +26,7 @@ Use CloudWatch Events and a lambda function to periodically enable and disable a
             "Effect": "Allow",
             "Action": [
                 "events:PutTargets",
+                "lambda:GetFunction",
                 "events:PutRule",
                 "rds:DescribeDBInstances"
             ],
