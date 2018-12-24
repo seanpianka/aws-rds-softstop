@@ -22,7 +22,7 @@ def handler(event, context):
         rule_arn = cwe_client.put_rule(
             Name=rule_name,
             ScheduleExpression="0 12 * * 5",
-            State="enabled",
+            State="ENABLED",
             Description='Softstop rds "{rds_instance}", enable/disable instance weekly',
         )["RuleArn"]
 
